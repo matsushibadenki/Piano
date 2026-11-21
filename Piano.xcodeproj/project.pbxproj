@@ -1,0 +1,841 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01E27CDCA7D639A41BAD3A10 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 47883748E5185116AACD6639 /* LICENSE */; };
+		035E9DDB7D9D4BC1868DF70C /* PianoAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FE9207F1C27EF440CD60DC /* PianoAudio.swift */; };
+		0EAD32B2C69F7E8420917133 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2426AE581076DA0A8D119 /* KeyboardView.swift */; };
+		0F167A9C42BA9A998A1961D5 /* PianoAudioUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D5B18824EE092918A1319D /* PianoAudioUnit.swift */; };
+		13AE88B31223FD6D3C3FBF23 /* PianoAU-macOS.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA27A7644AE9CCD72070224A /* PianoAU-macOS.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		172012D6E44A0FDA31CDFA28 /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
+		19B90EBC0943CD9CB0CA2DD9 /* PianoAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FE9207F1C27EF440CD60DC /* PianoAudio.swift */; };
+		34FB2737325DB99432AB65EE /* PianoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E2FFB256AFB4EB19129A93 /* PianoApp.swift */; };
+		3B759AB4CFB1A94749592B54 /* PianoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E2FFB256AFB4EB19129A93 /* PianoApp.swift */; };
+		494C16589795B21B09270202 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
+		4D8DE8C55A5E8679CA253894 /* PianoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2B9C455175179828B75621 /* PianoModel.swift */; };
+		637250DE9D020E7EA725DDAE /* PianoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2B9C455175179828B75621 /* PianoModel.swift */; };
+		63D2F77B05492515EDC27223 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 47883748E5185116AACD6639 /* LICENSE */; };
+		65EBBA93B52515D10405AFAD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
+		698CCAB30110E722BA9ED798 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
+		6EAE69A168168B3B0FB4E72B /* MIDIInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0238243698453DFAF9F26946 /* MIDIInput.swift */; };
+		7E1F0B3A14813D109B6BFBFF /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
+		81DCE9B02598F98BEB9FDAE7 /* PianoAudioUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D5B18824EE092918A1319D /* PianoAudioUnit.swift */; };
+		87F79A44780D32CA3BF1FD63 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
+		9069F60FD873A9CF679F0993 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2426AE581076DA0A8D119 /* KeyboardView.swift */; };
+		93A687E77A9E79EED44E61DC /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 47883748E5185116AACD6639 /* LICENSE */; };
+		A72EBCB5FFDBD20E237E51D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
+		B260A4E91CACB801547BE238 /* PianoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2B9C455175179828B75621 /* PianoModel.swift */; };
+		B34473ECE3FC7D1862F3F6E3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
+		BFE5482C0430D6EDEF60C0B0 /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
+		C3760CA4E858C6D334000BC6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
+		CD4ABD6F0543F4A6278CC155 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
+		E43630BD890A5BF95D325138 /* MIDIInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0238243698453DFAF9F26946 /* MIDIInput.swift */; };
+		EEBC1C0607F13C0D963E5D18 /* PianoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2B9C455175179828B75621 /* PianoModel.swift */; };
+		F527DB10E49BD6C0D6994667 /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
+		F5E55E5331AFB51D27977030 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 47883748E5185116AACD6639 /* LICENSE */; };
+		FADEF8FC7A06AF570A8F2A90 /* PianoAU-iOS.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A489E0A941564C5060F9E218 /* PianoAU-iOS.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9F7BE68C87DAFEEAD5FD6F33 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B42B8C8B46426218BAD49A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAAF912D5A32325A5C8035C6;
+			remoteInfo = "PianoAU-iOS";
+		};
+		C627D3D34335F0FDC0220D5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B42B8C8B46426218BAD49A8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 28B79D8F5F58F4ED4FBE7DE0;
+			remoteInfo = "PianoAU-macOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		82DCEF32B6603682F0CCBAC0 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FADEF8FC7A06AF570A8F2A90 /* PianoAU-iOS.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6BD0A39A8CB9397B2EB99B3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				13AE88B31223FD6D3C3FBF23 /* PianoAU-macOS.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00D5B18824EE092918A1319D /* PianoAudioUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoAudioUnit.swift; sourceTree = "<group>"; };
+		0238243698453DFAF9F26946 /* MIDIInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIDIInput.swift; sourceTree = "<group>"; };
+		081A474FFFB38AF987A0070C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		10F3E9E86130D1B720C38258 /* Piano-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Piano-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		186DFDCF8B9E9349878A4238 /* Piano.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Piano.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B2B9C455175179828B75621 /* PianoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoModel.swift; sourceTree = "<group>"; };
+		270B9AC7B59C3D0E4FBB4C57 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		47883748E5185116AACD6639 /* LICENSE */ = {isa = PBXFileReference; path = LICENSE; sourceTree = "<group>"; };
+		5B9E7F08779AFC3853AB795F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		62E2FFB256AFB4EB19129A93 /* PianoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoApp.swift; sourceTree = "<group>"; };
+		6489E238F1508689DDBB7ECA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		68A884C16A8E48711B4D97FC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		69FE9207F1C27EF440CD60DC /* PianoAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoAudio.swift; sourceTree = "<group>"; };
+		95A2426AE581076DA0A8D119 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
+		A489E0A941564C5060F9E218 /* PianoAU-iOS.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = "PianoAU-iOS.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA27A7644AE9CCD72070224A /* PianoAU-macOS.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "PianoAU-macOS.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoMIDI.swift; sourceTree = "<group>"; };
+		F9C1ACCA4CBF85FC120199A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		2455A9D8F96187F657E5E136 /* AudioUnit */ = {
+			isa = PBXGroup;
+			children = (
+				00D5B18824EE092918A1319D /* PianoAudioUnit.swift */,
+			);
+			path = AudioUnit;
+			sourceTree = "<group>";
+		};
+		5A3F900CAC1F2C937020FD83 = {
+			isa = PBXGroup;
+			children = (
+				2455A9D8F96187F657E5E136 /* AudioUnit */,
+				AE7E2D3E6B936C22DB14B660 /* F1 */,
+				F71ACB6FA0809E33380EA631 /* Piano */,
+				CA1071E00E14A10FF56DCDF8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AE7E2D3E6B936C22DB14B660 /* F1 */ = {
+			isa = PBXGroup;
+			children = (
+				47883748E5185116AACD6639 /* LICENSE */,
+			);
+			name = F1;
+			path = NativeEngine/F1;
+			sourceTree = "<group>";
+		};
+		CA1071E00E14A10FF56DCDF8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				10F3E9E86130D1B720C38258 /* Piano-macOS.app */,
+				186DFDCF8B9E9349878A4238 /* Piano.app */,
+				A489E0A941564C5060F9E218 /* PianoAU-iOS.appex */,
+				AA27A7644AE9CCD72070224A /* PianoAU-macOS.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F71ACB6FA0809E33380EA631 /* Piano */ = {
+			isa = PBXGroup;
+			children = (
+				95A2426AE581076DA0A8D119 /* KeyboardView.swift */,
+				0238243698453DFAF9F26946 /* MIDIInput.swift */,
+				62E2FFB256AFB4EB19129A93 /* PianoApp.swift */,
+				69FE9207F1C27EF440CD60DC /* PianoAudio.swift */,
+				F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */,
+				1B2B9C455175179828B75621 /* PianoModel.swift */,
+				BC79DDB849C71082C0018EB3 /* InfoPlist.strings */,
+				404FFC6846D605CBF1753E3F /* Localizable.strings */,
+			);
+			path = Piano;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A76EB33CD3F92274070B43B /* Piano-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D9C5E310605E4DC0E642F72 /* Build configuration list for PBXNativeTarget "Piano-macOS" */;
+			buildPhases = (
+				E4D1441A18F012F4A99B0669 /* Build F1 audio engine */,
+				2A9209BCB071517A1B0B63C1 /* Sources */,
+				8717617BF690D587EC05D41F /* Resources */,
+				E6BD0A39A8CB9397B2EB99B3 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A0FAF8A7E691596D1033CF79 /* PBXTargetDependency */,
+			);
+			name = "Piano-macOS";
+			packageProductDependencies = (
+			);
+			productName = "Piano-macOS";
+			productReference = 10F3E9E86130D1B720C38258 /* Piano-macOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		28B79D8F5F58F4ED4FBE7DE0 /* PianoAU-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5B3FD7B15883F5B25A3E42B /* Build configuration list for PBXNativeTarget "PianoAU-macOS" */;
+			buildPhases = (
+				6340433EB57C51F99B7927E1 /* Build F1 audio engine */,
+				DB6D31294E80BFD90D391C0D /* Sources */,
+				99ED5F3C9B19F7D89ACDE1D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PianoAU-macOS";
+			packageProductDependencies = (
+			);
+			productName = "PianoAU-macOS";
+			productReference = AA27A7644AE9CCD72070224A /* PianoAU-macOS.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		4ADCB20A16B475838F394277 /* Piano */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B8B2764A3D2AF9098878B88 /* Build configuration list for PBXNativeTarget "Piano" */;
+			buildPhases = (
+				A30BE5B0774B5E16D33EB5E5 /* Build F1 audio engine */,
+				055C4E659082F8CDCC4817DA /* Sources */,
+				1C4FBBA09BCBADE46349699C /* Resources */,
+				82DCEF32B6603682F0CCBAC0 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B2982D271F0FF6A5501E5A9E /* PBXTargetDependency */,
+			);
+			name = Piano;
+			packageProductDependencies = (
+			);
+			productName = Piano;
+			productReference = 186DFDCF8B9E9349878A4238 /* Piano.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CAAF912D5A32325A5C8035C6 /* PianoAU-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F9714F93E4178291B20E58EB /* Build configuration list for PBXNativeTarget "PianoAU-iOS" */;
+			buildPhases = (
+				735E86EF1BBD2681E20C22C3 /* Build F1 audio engine */,
+				1E5FB1EDC4643047B6275C73 /* Sources */,
+				6A8D0D62894FEBB14BB5DF4B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "PianoAU-iOS";
+			packageProductDependencies = (
+			);
+			productName = "PianoAU-iOS";
+			productReference = A489E0A941564C5060F9E218 /* PianoAU-iOS.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0B42B8C8B46426218BAD49A8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 1417E68B2F9F27F19500F3A8 /* Build configuration list for PBXProject "Piano" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				ja,
+				"zh-Hans",
+			);
+			mainGroup = 5A3F900CAC1F2C937020FD83;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CA1071E00E14A10FF56DCDF8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4ADCB20A16B475838F394277 /* Piano */,
+				1A76EB33CD3F92274070B43B /* Piano-macOS */,
+				CAAF912D5A32325A5C8035C6 /* PianoAU-iOS */,
+				28B79D8F5F58F4ED4FBE7DE0 /* PianoAU-macOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1C4FBBA09BCBADE46349699C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				698CCAB30110E722BA9ED798 /* InfoPlist.strings in Resources */,
+				01E27CDCA7D639A41BAD3A10 /* LICENSE in Resources */,
+				87F79A44780D32CA3BF1FD63 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6A8D0D62894FEBB14BB5DF4B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3760CA4E858C6D334000BC6 /* InfoPlist.strings in Resources */,
+				F5E55E5331AFB51D27977030 /* LICENSE in Resources */,
+				494C16589795B21B09270202 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8717617BF690D587EC05D41F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65EBBA93B52515D10405AFAD /* InfoPlist.strings in Resources */,
+				63D2F77B05492515EDC27223 /* LICENSE in Resources */,
+				A72EBCB5FFDBD20E237E51D6 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		99ED5F3C9B19F7D89ACDE1D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD4ABD6F0543F4A6278CC155 /* InfoPlist.strings in Resources */,
+				93A687E77A9E79EED44E61DC /* LICENSE in Resources */,
+				B34473ECE3FC7D1862F3F6E3 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6340433EB57C51F99B7927E1 /* Build F1 audio engine */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build F1 audio engine";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/libpiano_f1_native.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/bash \"${SRCROOT}/NativeEngine/build-xcode.sh\"";
+		};
+		735E86EF1BBD2681E20C22C3 /* Build F1 audio engine */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build F1 audio engine";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/libpiano_f1_native.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/bash \"${SRCROOT}/NativeEngine/build-xcode.sh\"";
+		};
+		A30BE5B0774B5E16D33EB5E5 /* Build F1 audio engine */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build F1 audio engine";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/libpiano_f1_native.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/bash \"${SRCROOT}/NativeEngine/build-xcode.sh\"";
+		};
+		E4D1441A18F012F4A99B0669 /* Build F1 audio engine */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build F1 audio engine";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/libpiano_f1_native.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/bash \"${SRCROOT}/NativeEngine/build-xcode.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		055C4E659082F8CDCC4817DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9069F60FD873A9CF679F0993 /* KeyboardView.swift in Sources */,
+				E43630BD890A5BF95D325138 /* MIDIInput.swift in Sources */,
+				3B759AB4CFB1A94749592B54 /* PianoApp.swift in Sources */,
+				035E9DDB7D9D4BC1868DF70C /* PianoAudio.swift in Sources */,
+				BFE5482C0430D6EDEF60C0B0 /* PianoMIDI.swift in Sources */,
+				637250DE9D020E7EA725DDAE /* PianoModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E5FB1EDC4643047B6275C73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81DCE9B02598F98BEB9FDAE7 /* PianoAudioUnit.swift in Sources */,
+				F527DB10E49BD6C0D6994667 /* PianoMIDI.swift in Sources */,
+				B260A4E91CACB801547BE238 /* PianoModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2A9209BCB071517A1B0B63C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0EAD32B2C69F7E8420917133 /* KeyboardView.swift in Sources */,
+				6EAE69A168168B3B0FB4E72B /* MIDIInput.swift in Sources */,
+				34FB2737325DB99432AB65EE /* PianoApp.swift in Sources */,
+				19B90EBC0943CD9CB0CA2DD9 /* PianoAudio.swift in Sources */,
+				7E1F0B3A14813D109B6BFBFF /* PianoMIDI.swift in Sources */,
+				4D8DE8C55A5E8679CA253894 /* PianoModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB6D31294E80BFD90D391C0D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0F167A9C42BA9A998A1961D5 /* PianoAudioUnit.swift in Sources */,
+				172012D6E44A0FDA31CDFA28 /* PianoMIDI.swift in Sources */,
+				EEBC1C0607F13C0D963E5D18 /* PianoModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A0FAF8A7E691596D1033CF79 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 28B79D8F5F58F4ED4FBE7DE0 /* PianoAU-macOS */;
+			targetProxy = C627D3D34335F0FDC0220D5C /* PBXContainerItemProxy */;
+		};
+		B2982D271F0FF6A5501E5A9E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAAF912D5A32325A5C8035C6 /* PianoAU-iOS */;
+			targetProxy = 9F7BE68C87DAFEEAD5FD6F33 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		404FFC6846D605CBF1753E3F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F9C1ACCA4CBF85FC120199A3 /* en */,
+				68A884C16A8E48711B4D97FC /* ja */,
+				5B9E7F08779AFC3853AB795F /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		BC79DDB849C71082C0018EB3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				081A474FFFB38AF987A0070C /* en */,
+				6489E238F1508689DDBB7ECA /* ja */,
+				270B9AC7B59C3D0E4FBB4C57 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1E8B7807DE19777F4BD22C3A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DERIVED_FILE_DIR)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lpiano_f1_native",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/NativeEngine/PianoF1.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3AD817AADB5DE2DAEE4B2821 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = AudioUnit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano.AudioUnit;
+				PRODUCT_NAME = PianoAudioUnit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3FE5A83ADAFE60B14FEE4063 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Piano;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5E22C261830A9B1E6914AFEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Piano;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano;
+				PRODUCT_NAME = Piano;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		911A2FC2B92FB4976570188C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = AudioUnit/PianoAU.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = AudioUnit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano.AudioUnit;
+				PRODUCT_NAME = PianoAudioUnit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		99EFAF0659866E8C98121555 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Piano;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9A25828E131D60648598720E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Piano;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano;
+				PRODUCT_NAME = Piano;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F1990E57A762DF503A7935BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DERIVED_FILE_DIR)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lpiano_f1_native",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/NativeEngine/PianoF1.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F1DE6437FDFC7AECCD7998E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = AudioUnit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano.AudioUnit;
+				PRODUCT_NAME = PianoAudioUnit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F5F1AABDBEA67AFBF7513B6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = AudioUnit/PianoAU.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = AudioUnit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.local.PhysicalPiano.AudioUnit;
+				PRODUCT_NAME = PianoAudioUnit;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1417E68B2F9F27F19500F3A8 /* Build configuration list for PBXProject "Piano" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1990E57A762DF503A7935BE /* Debug */,
+				1E8B7807DE19777F4BD22C3A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2B8B2764A3D2AF9098878B88 /* Build configuration list for PBXNativeTarget "Piano" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FE5A83ADAFE60B14FEE4063 /* Debug */,
+				99EFAF0659866E8C98121555 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2D9C5E310605E4DC0E642F72 /* Build configuration list for PBXNativeTarget "Piano-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A25828E131D60648598720E /* Debug */,
+				5E22C261830A9B1E6914AFEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F5B3FD7B15883F5B25A3E42B /* Build configuration list for PBXNativeTarget "PianoAU-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				911A2FC2B92FB4976570188C /* Debug */,
+				F5F1AABDBEA67AFBF7513B6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F9714F93E4178291B20E58EB /* Build configuration list for PBXNativeTarget "PianoAU-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1DE6437FDFC7AECCD7998E9 /* Debug */,
+				3AD817AADB5DE2DAEE4B2821 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0B42B8C8B46426218BAD49A8 /* Project object */;
+}

@@ -1,0 +1,98 @@
+name: Piano
+options:
+  developmentLanguage: en
+  deploymentTarget:
+    iOS: "18.0"
+    macOS: "15.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_OBJC_BRIDGING_HEADER: "$(SRCROOT)/NativeEngine/PianoF1.h"
+    LIBRARY_SEARCH_PATHS: ["$(inherited)", "$(DERIVED_FILE_DIR)"]
+    OTHER_LDFLAGS: ["$(inherited)", "-lpiano_f1_native"]
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    SWIFT_VERSION: "5.0"
+targetTemplates:
+  NativePiano:
+    sources:
+      - path: NativeEngine/F1/LICENSE
+        buildPhase: resources
+    preBuildScripts:
+      - name: Build F1 audio engine
+        script: /bin/bash "${SRCROOT}/NativeEngine/build-xcode.sh"
+        basedOnDependencyAnalysis: false
+        outputFiles:
+          - "$(DERIVED_FILE_DIR)/libpiano_f1_native.a"
+  PianoAU:
+    type: app-extension
+    sources:
+      - AudioUnit/PianoAudioUnit.swift
+      - path: Piano
+        excludes: [PianoApp.swift, KeyboardView.swift, PianoAudio.swift, MIDIInput.swift]
+    settings:
+      base:
+        PRODUCT_NAME: PianoAudioUnit
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SKIP_INSTALL: YES
+targets:
+  Piano:
+    templates: [NativePiano]
+    type: application
+    platform: iOS
+    sources: [Piano]
+    dependencies:
+      - target: PianoAU-iOS
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.PhysicalPiano
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Piano
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        TARGETED_DEVICE_FAMILY: "1,2"
+  Piano-macOS:
+    templates: [NativePiano]
+    type: application
+    platform: macOS
+    sources: [Piano]
+    dependencies:
+      - target: PianoAU-macOS
+        embed: true
+    settings:
+      base:
+        PRODUCT_NAME: Piano
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.PhysicalPiano
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Piano
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.music
+        ENABLE_HARDENED_RUNTIME: YES
+  PianoAU-iOS:
+    templates: [NativePiano, PianoAU]
+    platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.PhysicalPiano.AudioUnit
+        INFOPLIST_FILE: AudioUnit/Info.plist
+        TARGETED_DEVICE_FAMILY: "1,2"
+  PianoAU-macOS:
+    templates: [NativePiano, PianoAU]
+    platform: macOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.PhysicalPiano.AudioUnit
+        INFOPLIST_FILE: AudioUnit/Info.plist
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_ENTITLEMENTS: AudioUnit/PianoAU.entitlements
+schemes:
+  Piano:
+    build:
+      targets:
+        Piano: all
+  Piano-macOS:
+    build:
+      targets:
+        Piano-macOS: all

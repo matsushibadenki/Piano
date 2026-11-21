@@ -1,0 +1,20 @@
+[workspace]
+members = ["F1"]
+resolver = "2"
+
+[package]
+name = "piano-f1-native"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+piano-engine = { path = "F1" }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"

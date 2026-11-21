@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key><string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key><string>Piano F1</string>
+    <key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleName</key><string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key><string>XPC!</string>
+    <key>CFBundleShortVersionString</key><string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key><string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>NSExtension</key>
+    <dict>
+        <key>NSExtensionPointIdentifier</key><string>com.apple.AudioUnit</string>
+        <key>NSExtensionPrincipalClass</key><string>PianoAUFactory</string>
+        <key>NSExtensionAttributes</key>
+        <dict>
+            <key>AudioComponents</key>
+            <array><dict>
+                <key>name</key><string>Piano: Physical Modeling F1</string>
+                <key>description</key><string>Physical Modeling F1 Piano</string>
+                <key>factoryFunction</key><string>PianoAUFactory</string>
+                <key>manufacturer</key><string>LPno</string>
+                <key>subtype</key><string>PF01</string>
+                <key>type</key><string>aumu</string>
+                <key>version</key><integer>65536</integer>
+                <key>sandboxSafe</key><true/>
+                <key>tags</key><array><string>Synthesizer</string></array>
+            </dict></array>
+        </dict>
+    </dict>
+</dict>
+</plist>
