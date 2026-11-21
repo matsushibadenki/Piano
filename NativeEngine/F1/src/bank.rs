@@ -118,6 +118,8 @@ pub struct Bank {
     loss_g: V,
     loss_p: V,
     loss_s: V,
+    damper_low: V,
+    damper_low_coefficient: K,
     eta: V,
     frac_s: V,
     w: V,
@@ -251,6 +253,10 @@ impl Bank {
             loss_g: zero,
             loss_p: zero,
             loss_s: zero,
+            damper_low: zero,
+            damper_low_coefficient: F4::splat(
+                (1.0 - (-2.0 * std::f64::consts::PI * 1_350.0 / fs).exp()) as f32,
+            ),
             eta: zero,
             frac_s: zero,
             w: zero,
@@ -370,6 +376,7 @@ impl Bank {
                 self.bs2[i][s].set(k, 0.0);
             }
             self.loss_s[s].set(k, 0.0);
+            self.damper_low[s].set(k, 0.0);
             self.frac_s[s].set(k, 0.0);
         }
         self.hp_s.set(k, 0.0);
@@ -493,13 +500,20 @@ impl Bank {
             }
             // loss, tuning, reflection at the bridge end, damper
             self.dg += (self.dg_tgt - self.dg) * self.dg_coef;
+            // Felt contact takes more energy from the upper partials.
+            // Blend with a low-pass wave inside the loop, using the same
+            // smoothed contact as the broadband damping. Lift clears the
+            // spectral loss without having to restart the filter history.
+            let felt_mix = (F4::splat(1.0) - self.dg) * F4::splat(0.8);
             let mut b = [F4::zero(); NS];
             for s in 0..NS {
                 let ls = self.loss_g[s] * x[s] + self.loss_p[s] * self.loss_s[s];
                 self.loss_s[s] = ls;
                 let y = self.eta[s] * ls + self.frac_s[s];
                 self.frac_s[s] = ls - self.eta[s] * y;
-                b[s] = -(y * self.dg);
+                let low = &mut self.damper_low[s];
+                *low += (y - *low) * self.damper_low_coefficient;
+                b[s] = -((y + felt_mix * (*low - y)) * self.dg);
             }
             // hammers
             let mut f = [F4::zero(); NS];

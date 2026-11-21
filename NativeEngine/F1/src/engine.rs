@@ -523,7 +523,7 @@ impl Engine {
         self.activate(idx);
         // the strike may have changed the key's lever (`SYMPATHETIC_LEVER`)
         self.dirty = true;
-        for i in UNDAMPED_LO - MIDI_LO..NKEYS {
+        for i in self.unison.first_undamped_note() - MIDI_LO..NKEYS {
             self.activate_soon(i);
         }
         if self.knock > 0.0 {

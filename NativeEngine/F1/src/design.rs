@@ -184,8 +184,18 @@ pub enum Unison {
 }
 
 impl Unison {
+    pub(crate) fn first_undamped_note(self) -> usize {
+        match self {
+            Self::Reference => UNDAMPED_LO,
+            Self::Acoustic => 91, // G6: the top 18 notes have no dampers.
+        }
+    }
+
     pub(crate) fn key_params(self, midi: usize) -> KeyParams {
         let mut key = key_params(midi);
+        if midi >= self.first_undamped_note() {
+            key.damper_t60 = 0.0;
+        }
         if matches!(self, Self::Acoustic) && key.n_struck > 1 {
             let strings = key.n_struck;
             let detune = &mut key.detune[..strings];
@@ -267,10 +277,8 @@ pub fn key_params(midi: usize) -> KeyParams {
     let rate_after = 0.28 * rate_prompt;
     let b3 = interp(m, &[(21.0, 4.0e-9), (48.0, 7.0e-9), (72.0, 5.0e-9), (96.0, 2.5e-9), (108.0, 1.5e-9)], true);
     let b3 = b3 * interp(m, &BRILLIANCE_LOSS, true);
-    // Every key has a damper. A piano has none above about G6 and lets
-    // those strings ring; played from a computer keyboard that reads as
-    // keys that ignore their release, so here a short key press is a short
-    // note all the way up.
+    // The F1 reference damps all keys. The acoustic profile leaves the
+    // highest notes free to ring.
     let damper_t60 = if midi >= UNDAMPED_LO {
         0.0
     } else {

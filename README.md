@@ -65,6 +65,8 @@ The standalone app renders stereo through AVAudioEngine at 44.1–48 kHz, depend
 
 Each string has its own waveguide. Small tuning differences produce beating, and the bridge couples the strings to the soundboard and to one another. Piano adjusts unison spread and bridge coupling to bring out these variations. The soundboard body control reinforces the board's low-mid radiation independently of room reverb.
 
+Felt contact damps the upper partials of a string more strongly as its damper closes. The top 18 notes (G6–C8) have no dampers and decay naturally after release. These strings can also resonate sympathetically while playing other notes.
+
 ## Roadmap
 
 - 🟢 [Done] F1 audio engine, 88-key range, half-pedaling, soft pedal, and room and soundboard controls
