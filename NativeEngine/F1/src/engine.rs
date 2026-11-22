@@ -313,6 +313,9 @@ impl Engine {
         let treble_weight = k.treble_weight;
         k.rate_after *= sustain.1 * (1.0 - 0.24 * treble_weight);
         k.rate_prompt = k.rate_after + extra;
+        // Add a small frequency-dependent string loss in the treble so
+        // upper partials fall away faster than the tonal core.
+        k.b3 *= 1.0 + 0.55 * treble_weight;
         let (zone, zf) = bridge_zone(k.midi);
         let mut sc = [0.0; NZONES];
         sc[zone] = 1.0 - zf;
@@ -606,7 +609,7 @@ impl Engine {
         // (strings that were ringing along start anew with the full design;
         // what they held is far below what the hammer puts into them)
         self.apply_voicing(idx, false);
-        self.voices[idx].strike_with_pedal(v0, soft);
+        self.voices[idx].strike_with_pedal(v0, v_key, soft);
         self.activate(idx);
         // the strike may have changed the key's lever (`SYMPATHETIC_LEVER`)
         self.dirty = true;

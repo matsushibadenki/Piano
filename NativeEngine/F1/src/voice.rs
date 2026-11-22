@@ -127,7 +127,10 @@ pub struct Voice {
     /// is brighter than what the soundboard radiates).
     pub direct_g: f64,
     pub direct_hp_c: f64,
-    pub direct_lp_c: f64,
+    direct_lp_c: f64,
+    attack_radiation: f64,
+    attack_remaining: usize,
+    attack_duration: usize,
     /// The key's bridge wave `Z sum(w_i a_i)` of the latest sample.
     pub bridge: f64,
     /// Timbre correction of the key (see `morph.rs`): one resonator per
@@ -328,6 +331,9 @@ impl Voice {
             direct_hp_c: 1.0 - (-2.0 * PI * 0.5 * key.f1 / fs).exp(),
             direct_lp_c: 1.0 - (-2.0 * PI * (2.5 * key.f1).clamp(400.0, 5000.0)
                 * (1.0 - 0.22 * key.treble_weight) / fs).exp(),
+            attack_radiation: 0.0,
+            attack_remaining: 0,
+            attack_duration: (0.096 * fs).round() as usize,
             bridge: 0.0,
             morph: MorphBank::default(),
             morph_fade: 0.0,
@@ -403,10 +409,16 @@ impl Voice {
     }
 
     pub fn strike(&mut self, v0: f64) {
-        self.strike_with_pedal(v0, false);
+        self.strike_with_pedal(v0, v0, false);
     }
 
-    pub(crate) fn strike_with_pedal(&mut self, v0: f64, soft: bool) {
+    pub(crate) fn strike_with_pedal(&mut self, v0: f64, v_key: f64, soft: bool) {
+        // A close string component can dominate the opening transient.
+        // Reduce its high partials more on gentle attacks, then return
+        // to the steady radiation as the soundboard response develops.
+        let force = (v_key / 5.6).clamp(0.0, 1.0);
+        self.attack_radiation = self.key.treble_weight * (0.44 - 0.25 * force);
+        self.attack_remaining = self.attack_duration;
         // The lateral shift takes the hammer off the outer string of a
         // trichord and brings less compacted felt into contact.
         self.hammer_strings = if soft { self.key.n_struck.min(2) } else { self.key.n_struck };
@@ -443,6 +455,11 @@ impl Voice {
         self.long.count = 0;
     }
 
+    pub(crate) fn direct_low_pass(&self) -> f64 {
+        let remaining = self.attack_remaining as f64 / self.attack_duration as f64;
+        self.direct_lp_c * (1.0 - self.attack_radiation * remaining * remaining)
+    }
+
     pub fn lift_damper(&mut self) {
         self.damp_target = 1.0;
     }
@@ -466,6 +483,7 @@ impl Voice {
 
     /// Back to rest (the strings themselves: `Bank::clear_key`).
     pub fn reset(&mut self) {
+        self.attack_remaining = 0;
         self.hammer.active = false;
         self.struck = false;
         self.lever = self.symp_lever;
@@ -549,6 +567,7 @@ impl Voice {
     /// bridge waves) and the latest bridge wave.
     pub fn account(&mut self, energy: f64, n: usize, bridge: f64) {
         self.bridge = bridge;
+        self.attack_remaining = self.attack_remaining.saturating_sub(n);
         self.e_sum += energy;
         self.e_cnt += n;
         if self.e_cnt >= 64 {

@@ -328,7 +328,6 @@ impl Bank {
         }
         self.z.set(k, v.z as f32);
         self.hp_c.set(k, v.direct_hp_c as f32);
-        self.lp_c.set(k, v.direct_lp_c as f32);
         self.sync(k, v);
         self.clear_key(k);
         // section counts and look-ahead of the bank as a whole
@@ -344,6 +343,7 @@ impl Bank {
     pub fn sync(&mut self, k: usize, v: &Voice) {
         self.dg_tgt.set(k, v.damp_target as f32);
         self.decay_target.set(k, v.decay_gain as f32);
+        self.lp_c.set(k, v.direct_low_pass() as f32);
         self.gl.set(k, (v.pan[0] * v.direct_g) as f32);
         self.gr.set(k, (v.pan[1] * v.direct_g) as f32);
         if self.sc[k] != v.sc {
