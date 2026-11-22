@@ -103,8 +103,9 @@ final class PianoAudio: ObservableObject {
         pedalCommand = -2
         queue.push(-1)
     }
-    func setReverb(_ percent: Int) { worker.setReverb(percent) }
-    func setBody(_ percent: Int) { worker.setBody(percent) }
+    func setParameter(_ parameter: PianoParameter, percent: Int) {
+        worker.parameters.set(parameter, Float(percent))
+    }
 }
 
 /// Serializes engine and session lifecycle work away from the UI and render threads.
@@ -112,16 +113,7 @@ private final class AudioEngineWorker: @unchecked Sendable {
     private let lifecycle = DispatchQueue(label: "com.local.PhysicalPiano.audio", qos: .userInitiated)
     private var engine: AVAudioEngine?
     private var notes: NoteQueue?
-    private let reverb = Atomic<Int>(30)
-    private let body = Atomic<Int>(45)
-
-    func setBody(_ percent: Int) {
-        body.store(percent, ordering: .relaxed)
-    }
-
-    func setReverb(_ percent: Int) {
-        reverb.store(percent, ordering: .relaxed)
-    }
+    let parameters = PianoParameters()
 
     func start(completion: @escaping @MainActor @Sendable (NoteQueue?) -> Void) {
         lifecycle.async {
@@ -160,17 +152,14 @@ private final class AudioEngineWorker: @unchecked Sendable {
         }
         let newQueue = NoteQueue()
         let model = PianoModel(sampleRate: format.sampleRate)
-        let source = AVAudioSourceNode(format: format) { [weak self] _, _, count, data in
+        let source = AVAudioSourceNode(format: format) { [parameters] _, _, count, data in
             let buffers = UnsafeMutableAudioBufferListPointer(data)
             guard buffers.count == 2,
                   let left = buffers[0].mData?.assumingMemoryBound(to: Float.self),
                   let right = buffers[1].mData?.assumingMemoryBound(to: Float.self) else {
                 return kAudio_ParamError
             }
-            if let self {
-                model.setReverb(Float(self.reverb.load(ordering: .relaxed)) / 100)
-                model.setBody(Float(self.body.load(ordering: .relaxed)) / 100)
-            }
+            parameters.apply(to: model)
             newQueue.drain(into: model)
             model.render(left, right, frames: count)
             return noErr

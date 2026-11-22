@@ -3,7 +3,7 @@
 "Retry audio" = "Retry audio";
 "Playing the piano" = "Playing the piano";
 "OK" = "OK";
-"Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes." = "Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes.";
+"Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes. Drag the sound knobs vertically to adjust them." = "Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes. Drag the sound knobs vertically to adjust them.";
 "Lower octave" = "Lower octave";
 "Higher octave" = "Higher octave";
 "Bass" = "Bass";
@@ -17,3 +17,15 @@
 "Toggle damper pedal" = "Toggle damper pedal";
 "Soundboard body" = "Soundboard body";
 "Sound controls" = "Sound controls";
+"Tone & action" = "Tone & action";
+"Acoustics & space" = "Acoustics & space";
+"Hammer" = "Hammer";
+"Brightness" = "Brightness";
+"Decay" = "Decay";
+"Unison" = "Unison";
+"Inharmonicity" = "Inharmonicity";
+"Resonance" = "Resonance";
+"Volume" = "Volume";
+"Click or drag across any of the 88 keys. Drag a sound knob up or down to adjust it. Double-click it to reset. Use the damper slider and soft pedal to shape the sound." = "Click or drag across any of the 88 keys. Drag a sound knob up or down to adjust it. Double-click it to reset. Use the damper slider and soft pedal to shape the sound.";
+"Language" = "Language";
+"System default" = "System default";

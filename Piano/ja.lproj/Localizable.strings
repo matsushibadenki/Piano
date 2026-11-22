@@ -3,7 +3,7 @@
 "Retry audio" = "オーディオを再開";
 "Playing the piano" = "ピアノの弾き方";
 "OK" = "OK";
-"Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes." = "複数の鍵盤を同時に押すと和音を弾けます。矢印で音域を切り替え、スライダーで打鍵の強さを調整できます。ダンパースライダーで、鍵盤から指を離した後の余韻を調整できます。ソフトペダルをオンにすると、次の打鍵から音色が柔らかくなります。";
+"Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes. Drag the sound knobs vertically to adjust them." = "複数の鍵盤を同時に押すと和音を弾けます。矢印で音域を切り替え、スライダーで打鍵の強さを調整できます。ダンパースライダーで、鍵盤から指を離した後の余韻を調整できます。ソフトペダルをオンにすると、次の打鍵から音色が柔らかくなります。音色ノブは上下にドラッグして調整します。";
 "Lower octave" = "音域を下げる";
 "Higher octave" = "音域を上げる";
 "Bass" = "低音";
@@ -17,3 +17,15 @@
 "Toggle damper pedal" = "ダンパーペダルを切り替え";
 "Soundboard body" = "響板の厚み";
 "Sound controls" = "音色調整";
+"Tone & action" = "音色と打弦";
+"Acoustics & space" = "響きと空間";
+"Hammer" = "ハンマー";
+"Brightness" = "明るさ";
+"Decay" = "減衰時間";
+"Unison" = "ユニゾン";
+"Inharmonicity" = "非調和性";
+"Resonance" = "弦の共鳴";
+"Volume" = "音量";
+"Click or drag across any of the 88 keys. Drag a sound knob up or down to adjust it. Double-click it to reset. Use the damper slider and soft pedal to shape the sound." = "88鍵をクリックまたはドラッグして演奏できます。音色ノブは上下にドラッグで調整し、ダブルクリックで初期値に戻します。ダンパースライダーとソフトペダルで響きを変えられます。";
+"Language" = "言語";
+"System default" = "システム設定に従う";

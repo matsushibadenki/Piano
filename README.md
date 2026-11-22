@@ -4,9 +4,11 @@ Piano is an 88-key physical-modeling instrument for macOS, iOS, and iPadOS. It r
 
 ## Screenshots
 
-| macOS | iPhone |
-| :---: | :---: |
-| <img src="docs/screenshots/piano-macos.png" alt="Piano on macOS with two octaves of keys" width="600"> | <img src="docs/screenshots/piano-iphone.png" alt="Piano on iPhone with a one-octave keyboard and the half-pedal slider" width="240"> |
+<img src="docs/screenshots/piano-macos.png" alt="Piano on macOS with nine rotary controls and the complete 88-key keyboard" width="780">
+
+| English | 日本語 | 简体中文 |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/piano-iphone.png" alt="Piano on iPhone in English" width="200"> | <img src="docs/screenshots/piano-iphone-ja.png" alt="Piano on iPhone in Japanese" width="200"> | <img src="docs/screenshots/piano-iphone-zh-hans.png" alt="Piano on iPhone in Simplified Chinese" width="200"> |
 
 ## Build and run
 
@@ -33,17 +35,33 @@ Piano requires macOS 15 or later, or iOS and iPadOS 18 or later. To build, insta
 
 ## Play
 
-- **Keyboard:** Click and drag across keys on Mac, or use multitouch on iPhone and iPad. The arrow buttons shift the visible range from A0 to C8. The upper slider sets hammer velocity for on-screen notes.
+- **Keyboard:** Mac displays all 88 keys, from A0 to C8. Click or drag across them to play. On iPhone and iPad, use multitouch and the arrows to change octaves. The upper slider sets hammer velocity for on-screen notes.
 - **Damper pedal:** The slider below the keys sets pedal travel from 0% to 100%. Its waveform button switches between fully released and fully depressed. Partial travel changes both note decay and sympathetic resonance.
 - **Soft pedal:** The speaker button above the keys engages una corda on the next notes. It models softer felt contact and directly strikes two strings on three-string notes. The remaining string can resonate through the bridge.
-- **Sound controls:** The sliders icon opens soundboard body and room reverb. Both settings are saved in the app. Soundboard body defaults to 45% and reverb to 30%. Set body to 0% for the previous voicing.
-- **Languages:** English, Japanese, and Simplified Chinese.
+- **Sound controls:** The rotary knobs at the top of the instrument control the sound. Drag a knob vertically to adjust it, or double-click or double-tap it to restore its default. The app saves your settings.
+- **Languages:** Use the globe menu to choose English, Japanese, Simplified Chinese, or the system default.
+
+## Sound parameters
+
+| Control | What it changes |
+| --- | --- |
+| Hammer | Felt stiffness at the hammer–string contact |
+| Brightness | Level of upper frequencies |
+| Decay | Loss in the string loop and how long notes ring |
+| Unison | Tuning spread between strings struck by the same key |
+| Inharmonicity | String stiffness and the spacing of upper partials |
+| Resonance | Sympathetic ringing of other strings |
+| Soundboard body | Low-mid radiation from the soundboard |
+| Room reverb | Reflections and decay from the modeled room |
+| Volume | Output level |
+
+Unison and inharmonicity have three settings (0%, 50%, and 100%). New strikes use the selected string design. Other settings have a continuous range in AUv3 and 1% steps in the app.
 
 ## MIDI and AUv3
 
 The standalone app automatically connects to available CoreMIDI sources. It responds to note velocity, continuous damper position (CC64), and the soft pedal (CC67).
 
-The app embeds the **Piano: Physical Modeling F1** AUv3 instrument. On Mac, launch `Piano.app` once, then select the instrument on a software instrument track in an AUv3-compatible DAW. On iPhone and iPad, select it in an AUv3-compatible host. The plug-in supports mono or stereo output at 44.1–96 kHz and exposes soundboard body and room reverb to the host.
+The app embeds the **Piano: Physical Modeling F1** AUv3 instrument. On Mac, launch `Piano.app` once, then select the instrument on a software instrument track in an AUv3-compatible DAW. On iPhone and iPad, select it in an AUv3-compatible host. The plug-in supports mono or stereo output at 44.1–96 kHz and exposes the same nine sound controls to the host.
 
 On Mac you can validate the registered instrument with:
 

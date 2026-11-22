@@ -1,7 +1,6 @@
 import AVFoundation
 import AudioToolbox
 import CoreMIDI
-import Synchronization
 
 @objc(PianoAUFactory)
 final class PianoAUFactory: NSObject, AUAudioUnitFactory {
@@ -17,8 +16,7 @@ final class PianoAudioUnit: AUAudioUnit {
     private var outputs: AUAudioUnitBusArray!
     private var inputs: AUAudioUnitBusArray!
     private var renderer: InstrumentRender?
-    private let reverbPercent = Atomic<Float>(30)
-    private let bodyPercent = Atomic<Float>(45)
+    private let parameters = PianoParameters()
 
     override init(componentDescription: AudioComponentDescription,
                   options: AudioComponentInstantiationOptions = []) throws {
@@ -30,26 +28,26 @@ final class PianoAudioUnit: AUAudioUnit {
         inputs = AUAudioUnitBusArray(audioUnit: self, busType: .input, busses: [])
 
         let bundle = Bundle(for: PianoAUFactory.self)
-        func percentParameter(_ identifier: String, label: String,
-                              address: AUParameterAddress, initial: AUValue) -> AUParameter {
+        let controls = PianoParameter.allCases.map { control in
             let parameter = AUParameterTree.createParameter(
-                withIdentifier: identifier, name: NSLocalizedString(label, bundle: bundle, comment: ""),
-                address: address, min: 0, max: 100, unit: .percent, unitName: nil,
-                flags: [.flag_IsReadable, .flag_IsWritable], valueStrings: nil, dependentParameters: nil
+                withIdentifier: control.identifier,
+                name: NSLocalizedString(control.title, bundle: bundle, comment: ""),
+                address: AUParameterAddress(control.rawValue), min: 0, max: 100, unit: .percent,
+                unitName: nil, flags: [.flag_IsReadable, .flag_IsWritable],
+                valueStrings: nil, dependentParameters: nil
             )
-            parameter.value = initial
+            parameter.value = Float(control.defaultPercent)
             return parameter
         }
-        let tree = AUParameterTree.createTree(withChildren: [
-            percentParameter("roomReverb", label: "Room reverb", address: 0, initial: 30),
-            percentParameter("soundboardBody", label: "Soundboard body", address: 1, initial: 45),
-        ])
-        tree.implementorValueObserver = { [weak self] parameter, value in
-            self?.setParameter(parameter.address, value)
+        let tree = AUParameterTree.createTree(withChildren: controls)
+        tree.implementorValueObserver = { [parameters] parameter, value in
+            if let control = UInt32(exactly: parameter.address).flatMap(PianoParameter.init(rawValue:)) {
+                parameters.set(control, value)
+            }
         }
-        tree.implementorValueProvider = { [weak self] parameter in
-            if parameter.address == 1 { return self?.bodyPercent.load(ordering: .relaxed) ?? 45 }
-            return self?.reverbPercent.load(ordering: .relaxed) ?? 30
+        tree.implementorValueProvider = { [parameters] parameter in
+            guard let control = UInt32(exactly: parameter.address).flatMap(PianoParameter.init(rawValue:)) else { return 0 }
+            return parameters.get(control)
         }
         parameterTree = tree
     }
@@ -86,20 +84,9 @@ final class PianoAudioUnit: AUAudioUnit {
             guard bus == 0 else { return kAudioUnitErr_InvalidElement }
             guard count <= renderer.capacity else { return kAudioUnitErr_TooManyFramesToProcess }
             flags.pointee.remove(.unitRenderAction_OutputIsSilence)
-            renderer.model.setReverb(self.reverbPercent.load(ordering: .relaxed) / 100)
-            renderer.model.setBody(self.bodyPercent.load(ordering: .relaxed) / 100)
+            self.parameters.apply(to: renderer.model)
             return renderer.render(frames: count, time: timestamp.pointee.mSampleTime, output: output,
-                                   events: events, setParameter: self.setParameter)
-        }
-    }
-
-    private func setParameter(_ address: AUParameterAddress, _ percent: Float) {
-        guard percent.isFinite else { return }
-        let clamped = min(100, max(0, percent))
-        switch address {
-        case 0: reverbPercent.store(clamped, ordering: .relaxed)
-        case 1: bodyPercent.store(clamped, ordering: .relaxed)
-        default: break
+                                   events: events, parameters: self.parameters)
         }
     }
 
@@ -138,7 +125,7 @@ private final class InstrumentRender {
     }
 
     func render(frames: AUAudioFrameCount, time: Float64, output: UnsafeMutablePointer<AudioBufferList>,
-                events: UnsafePointer<AURenderEvent>?, setParameter: (AUParameterAddress, Float) -> Void) -> AUAudioUnitStatus {
+                events: UnsafePointer<AURenderEvent>?, parameters: PianoParameters) -> AUAudioUnitStatus {
         let buffers = UnsafeMutableAudioBufferListPointer(output)
         guard (1...2).contains(buffers.count) else { return kAudioUnitErr_FormatNotSupported }
         let size = frames * UInt32(MemoryLayout<Float>.stride)
@@ -172,14 +159,10 @@ private final class InstrumentRender {
                 }
             case .parameter, .parameterRamp:
                 let parameter = current.pointee.parameter
-                if parameter.value.isFinite {
-                    setParameter(parameter.parameterAddress, parameter.value)
-                    let amount = min(100, max(0, parameter.value)) / 100
-                    switch parameter.parameterAddress {
-                    case 0: model.setReverb(amount)
-                    case 1: model.setBody(amount)
-                    default: break
-                    }
+                if let address = UInt32(exactly: parameter.parameterAddress),
+                   let control = PianoParameter(rawValue: address), parameter.value.isFinite {
+                    parameters.set(control, parameter.value)
+                    model.setParameter(control, percent: parameters.get(control))
                 }
             default:
                 break

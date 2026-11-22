@@ -26,6 +26,7 @@ use crate::leveling::Leveling;
 use crate::room::{Room, NF};
 use crate::soundboard::{Soundboard, NOUT};
 use crate::voice::{Voice, LEVER_STEP};
+use std::sync::Arc;
 
 pub const MAX_BLOCK: usize = 4096;
 const _: () = assert!(CHUNK == LEVER_STEP && NKEYS % KPB == 0);
@@ -121,6 +122,11 @@ pub struct Engine {
     unison: Unison,
     /// Hammer hardness factor (kept to restore it on a rebuilt key).
     hardness: f64,
+    decay: f64,
+    /// Alternate string setups built before the audio callback starts.
+    voicings: Vec<Vec<Option<Voice>>>,
+    installed_voicing: [usize; NKEYS],
+    selected_voicing: usize,
     /// Keys whose strings are still tuned to the previous reference pitch.
     stale: Vec<bool>,
     stale_left: usize,
@@ -138,8 +144,9 @@ pub struct Engine {
     pub board_out: f64,
     /// Reinforcement of the soundboard's low-mid radiation (0..1).
     pub body: f64,
-    body_coefficients: [f32; 2],
-    body_state: [[f32; 2]; 2],
+    pub brightness: f64,
+    body_coefficients: [f32; 3],
+    body_state: [[f32; 3]; 2],
     /// Level of the per-key timbre correction (1 = as in the table, see
     /// `morph.rs`; 0 = the model alone).
     pub morph: f64,
@@ -215,7 +222,7 @@ impl Engine {
         let board = Soundboard::new(fs);
         let voices: Vec<Voice> = (MIDI_LO..MIDI_LO + NKEYS)
             .map(|midi| Self::build_voice(&board, fs, max_ap, max_bq,
-                crate::sustain::correction(midi), unison.key_params(midi)))
+                crate::sustain::correction(midi), unison.key_params(midi), None))
             .collect();
         // room in the delay lines for the lowest reference pitch
         let period = |i: usize| (1.06 * fs / (voices[i].key.f1 * A4_MIN / reference_pitch())).ceil() as usize;
@@ -260,6 +267,10 @@ impl Engine {
             max_bq,
             unison,
             hardness: 1.0,
+            decay: 1.0,
+            voicings: Vec::new(),
+            installed_voicing: [4; NKEYS],
+            selected_voicing: 4,
             stale: vec![false; NKEYS],
             stale_left: 0,
             retune_clock: 0,
@@ -269,10 +280,11 @@ impl Engine {
             room_tone: ROOM_STRINGS,
             board_out: 1.0,
             body: 0.0,
-            body_coefficients: [85.0, 740.0].map(|hz| {
+            brightness: 0.0,
+            body_coefficients: [85.0, 740.0, 1_800.0].map(|hz| {
                 (1.0 - (-2.0 * std::f64::consts::PI * hz / fs).exp()) as f32
             }),
-            body_state: [[0.0; 2]; 2],
+            body_state: [[0.0; 3]; 2],
             morph: 1.0,
             dip_c: std::array::from_fn(|c| {
                 let fc = if c < 2 { DIP_HZ_MIC } else { DIP_HZ_FAR };
@@ -288,7 +300,7 @@ impl Engine {
     /// One key's strings and their lever on the bridge. `sustain`: the
     /// key's (prompt, after) multipliers on its nominal decay rates, see
     /// `sustain.rs`.
-    fn build_voice(board: &Soundboard, fs: f64, max_ap: usize, max_bq: usize, sustain: (f64, f64), mut k: KeyParams) -> Voice {
+    fn build_voice(board: &Soundboard, fs: f64, max_ap: usize, max_bq: usize, sustain: (f64, f64), mut k: KeyParams, hammer_table: Option<Arc<[f64]>>) -> Voice {
         // Lever ratio between the key's strings and the board, chosen so
         // that the in-phase motion of the unison loses energy to the board at
         // the key's nominal rate on average. The actual rate of each partial
@@ -335,12 +347,80 @@ impl Engine {
             c *= 0.97;
             shift = pull(c);
         }
-        let mut v = Voice::new(fs, k, max_ap, max_bq, -TUNE_COMP * shift);
+        let mut v = Voice::with_hammer_table(fs, k, max_ap, max_bq, -TUNE_COMP * shift, hammer_table);
         v.direct_g = crate::voicing::direct_gain(midi) * direct_share(midi);
         v.set_morph(fs, &crate::morph::gains(midi, fs));
         v.set_coupling(c);
         v.set_sympathetic_lever(SYMPATHETIC_LEVER);
         v
+    }
+
+    /// Prepare the bounded stiffness and unison settings off the render thread.
+    pub fn prepare_voicings(&mut self) {
+        if !self.voicings.is_empty() {
+            return;
+        }
+        // Build the three stiffness families in parallel during setup.
+        // Only immutable hammer tables are shared with the existing voices.
+        let engine = &*self;
+        self.voicings = std::thread::scope(|scope| {
+            let workers: Vec<_> = (0..3)
+                .map(|stiffness| scope.spawn(move || engine.prepare_stiffness(stiffness)))
+                .collect();
+            workers.into_iter().flat_map(|worker| worker.join().expect("string setup")).collect()
+        });
+    }
+
+    fn prepare_stiffness(&self, stiffness: usize) -> Vec<Vec<Option<Voice>>> {
+        (0..3).map(|unison| {
+            (MIDI_LO..MIDI_LO + NKEYS).map(|midi| {
+                if stiffness == 1 && unison == 1 {
+                    return None;
+                }
+
+                let mut key = self.unison.key_params(midi);
+                key.b_inh *= [0.72, 1.0, 1.35][stiffness];
+                if key.n_struck > 1 {
+                    let detune = &mut key.detune[..key.n_struck];
+                    let center = detune.iter().sum::<f64>() / detune.len() as f64;
+                    for cents in detune {
+                        *cents = center + (*cents - center) * [0.42, 1.0, 1.85][unison];
+                    }
+                }
+                Some(Self::build_voice(&self.board, self.fs, self.max_ap, self.max_bq,
+                    crate::sustain::correction(midi), key, Some(self.voices[midi - MIDI_LO].hammer_table())))
+            }).collect()
+        }).collect()
+    }
+
+    pub fn select_voicing(&mut self, stiffness: usize, unison: usize) {
+        if !self.voicings.is_empty() && stiffness < 3 && unison < 3 {
+            self.selected_voicing = stiffness * 3 + unison;
+        }
+    }
+
+    fn apply_voicing(&mut self, idx: usize, light: bool) {
+        let old_setup = self.installed_voicing[idx];
+        let new_setup = self.selected_voicing;
+        if old_setup == new_setup {
+            self.set_design(idx, light);
+            return;
+        }
+        let voice = self.voicings[new_setup][idx].take().expect("prepared string setup");
+        let mut old = std::mem::replace(&mut self.voices[idx], voice);
+        let voice = &mut self.voices[idx];
+        voice.held = old.held;
+        voice.keep_alive = old.keep_alive;
+        voice.active = old.active;
+        voice.is_light = light;
+        voice.set_hardness(self.hardness);
+        voice.set_decay(self.decay);
+        voice.set_damper_pedal(self.pedal);
+        old.reset();
+        self.voicings[old_setup][idx] = Some(old);
+        self.installed_voicing[idx] = new_setup;
+        self.banks[idx / KPB].install(idx % KPB, voice, light);
+        self.dirty = true;
     }
 
     /// Rebuild one key with other sustain multipliers than the table's
@@ -349,7 +429,7 @@ impl Engine {
     pub fn set_key_sustain(&mut self, midi: usize, sustain: (f64, f64)) {
         self.all_off();
         let i = midi - MIDI_LO;
-        self.voices[i] = Self::build_voice(&self.board, self.fs, self.max_ap, self.max_bq, sustain, self.unison.key_params(midi));
+        self.voices[i] = Self::build_voice(&self.board, self.fs, self.max_ap, self.max_bq, sustain, self.unison.key_params(midi), None);
         self.banks[i / KPB].install(i % KPB, &self.voices[i], false);
     }
 
@@ -374,6 +454,9 @@ impl Engine {
         let before = reference_pitch();
         set_reference_pitch(hz);
         if reference_pitch() != before {
+            self.voicings.clear();
+            self.installed_voicing.fill(4);
+            self.selected_voicing = 4;
             self.stale.fill(true);
             self.stale_left = NKEYS;
         }
@@ -383,9 +466,10 @@ impl Engine {
     fn retune_key(&mut self, idx: usize) {
         let midi = MIDI_LO + idx;
         let mut v = Self::build_voice(&self.board, self.fs, self.max_ap, self.max_bq,
-            crate::sustain::correction(midi), self.unison.key_params(midi));
+            crate::sustain::correction(midi), self.unison.key_params(midi), None);
         let old = &self.voices[idx];
         v.set_hardness(self.hardness);
+        v.set_decay(self.decay);
         v.held = old.held;
         v.keep_alive = old.keep_alive;
         v.active = old.active;
@@ -518,7 +602,7 @@ impl Engine {
         }
         // (strings that were ringing along start anew with the full design;
         // what they held is far below what the hammer puts into them)
-        self.set_design(idx, false);
+        self.apply_voicing(idx, false);
         self.voices[idx].strike_with_pedal(v0, soft);
         self.activate(idx);
         // the strike may have changed the key's lever (`SYMPATHETIC_LEVER`)
@@ -575,6 +659,13 @@ impl Engine {
         }
     }
 
+    pub fn set_decay(&mut self, decay: f64) {
+        if self.decay != decay {
+            self.decay = decay;
+            for voice in &mut self.voices { voice.set_decay(decay); }
+        }
+    }
+
     pub fn set_hardness(&mut self, h: f64) {
         self.hardness = h;
         for v in self.voices.iter_mut() {
@@ -603,7 +694,7 @@ impl Engine {
         self.knock_left = 0;
         // a stale filter state here would be heard as a thump on the next note
         self.dip_s = [0.0; NOUT];
-        self.body_state = [[0.0; 2]; 2];
+        self.body_state = [[0.0; 3]; 2];
         self.idle = true;
     }
 
@@ -654,7 +745,7 @@ impl Engine {
                 Some(i) => {
                     // strings at rest that are woken to ring along
                     if !self.voices[i].active {
-                        self.set_design(i, true);
+                        self.apply_voicing(i, true);
                     }
                     self.activate(i)
                 }
@@ -790,18 +881,24 @@ impl Engine {
         let body = self.body as f32;
         let direct = self.direct as f32 * (1.0 - 0.12 * body);
         let (bo, room_amount, gain) = (self.board_out as f32, self.room_amount as f32, self.gain as f32);
-        let [bass, mid] = self.body_coefficients;
+        let [bass, mid, bright] = self.body_coefficients;
+        let brightness = (0.42 * self.brightness) as f32;
         for t in 0..len {
             let mut board = [self.rad[0][t], self.rad[1][t]];
-            for (signal, [low, broad]) in board.iter_mut().zip(&mut self.body_state) {
+            for (signal, [low, broad, _]) in board.iter_mut().zip(&mut self.body_state) {
                 *low += bass * (*signal - *low);
                 *broad += mid * (*signal - *broad);
                 *signal += (0.55 * body) * (*broad - *low);
             }
             let l = bo * board[0] + direct * self.acc.out[t][0].sum() + ml[t];
             let r = bo * board[1] + direct * self.acc.out[t][1].sum() + mr[t];
-            self.out_l[off + t] = soft_clip((l + room_amount * wl[t]) * gain);
-            self.out_r[off + t] = soft_clip((r + room_amount * wr[t]) * gain);
+            let [mut l, mut r] = [l + room_amount * wl[t], r + room_amount * wr[t]];
+            for (signal, [_, _, low]) in [&mut l, &mut r].into_iter().zip(&mut self.body_state) {
+                *low += bright * (*signal - *low);
+                *signal += brightness * (*signal - *low);
+            }
+            self.out_l[off + t] = soft_clip(l * gain);
+            self.out_r[off + t] = soft_clip(r * gain);
         }
 
         // retire voices whose strings have come to rest
@@ -824,7 +921,7 @@ impl Engine {
             self.board.reset();
             self.room.reset();
             self.dip_s = [0.0; NOUT];
-            self.body_state = [[0.0; 2]; 2];
+            self.body_state = [[0.0; 3]; 2];
                 self.idle = true;
         }
     }

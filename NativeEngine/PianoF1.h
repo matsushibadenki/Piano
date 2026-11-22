@@ -12,8 +12,7 @@ void piano_f1_note_on(PianoF1 * _Nonnull piano, uint32_t note, float velocity, b
 void piano_f1_note_off(PianoF1 * _Nonnull piano, uint32_t note);
 void piano_f1_sustain(PianoF1 * _Nonnull piano, float position);
 void piano_f1_all_off(PianoF1 * _Nonnull piano);
-void piano_f1_set_body(PianoF1 * _Nonnull piano, float amount);
-void piano_f1_set_reverb(PianoF1 * _Nonnull piano, float amount);
+void piano_f1_set_parameter(PianoF1 * _Nonnull piano, uint32_t address, float amount);
 void piano_f1_render(PianoF1 * _Nonnull piano, float * _Nonnull left,
                      float * _Nonnull right, uint32_t frames);
 

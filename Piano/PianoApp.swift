@@ -3,13 +3,18 @@ import SwiftUI
 
 @main
 struct PianoApp: App {
+    #if os(macOS)
+    @AppStorage("pianoLanguage") private var language = PianoLanguage.system
+    #endif
+
     var body: some Scene {
         #if os(macOS)
-        Window("Piano", id: "instrument") {
+        Window(Text(verbatim: language.windowTitle), id: "instrument") {
             PianoView()
-                .frame(minWidth: 560, minHeight: 360)
+                .frame(minWidth: 560, minHeight: 310, maxHeight: 360)
         }
-        .defaultSize(width: 900, height: 650)
+        .defaultSize(width: 960, height: 330)
+        .windowResizability(.contentSize)
         #else
         WindowGroup { PianoView() }
         #endif
@@ -19,6 +24,7 @@ struct PianoApp: App {
 struct PianoView: View {
     @StateObject private var audio = PianoAudio()
     @Environment(\.scenePhase) private var phase
+    @AppStorage("pianoLanguage") private var language = PianoLanguage.system
     @State private var midi = MIDIInput()
     @State private var midiKeys: Set<MIDIKey> = []
     @State private var midiDampers: [MIDIEndpointRef: Int] = [:]
@@ -30,151 +36,165 @@ struct PianoView: View {
     @State private var touches: Set<Int> = []
     @State private var accessibilityNotes: [Int: UUID] = [:]
     @State private var info = false
-    @State private var showSound = false
-    @AppStorage("soundboardBodyPercent") private var bodyPercent = 45
-    @AppStorage("roomReverbPercent") private var reverbPercent = 30
     @State private var visibleNotes = 14
     var playsAudio = true
 
     private let brass = Color(red: 0.94, green: 0.75, blue: 0.47)
 
-    var body: some View {
+    @ViewBuilder private var instrumentLayout: some View {
+        #if os(macOS)
+        VStack(spacing: 8) {
+            toneControls(columns: 9)
+            controls
+            retryAudio
+            keyboard(layout: .full, showLabels: true, miniature: true)
+                .frame(minHeight: 76, idealHeight: 112, maxHeight: 112)
+            damperControl
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxHeight: .infinity)
+        #else
         GeometryReader { proxy in
             let wide = proxy.size.width >= 580
             let compact = proxy.size.height < 450
-            VStack(spacing: compact ? 12 : 24) {
-                header
-                if audio.unavailable {
-                    Button("Retry audio", systemImage: "speaker.slash") { audio.start() }
-                        .font(.callout)
+            VStack(spacing: compact ? 8 : 12) {
+                let fitsOneRow = proxy.size.width - 32 >= fullToneRowWidth
+                if compact && !fitsOneRow {
+                    ScrollView(.horizontal) {
+                        toneControls(columns: 9).frame(width: fullToneRowWidth)
+                    }
+                    .scrollIndicators(.hidden)
+                } else {
+                    toneControls(columns: fitsOneRow ? 9 : 5)
                 }
+                retryAudio
                 controls
-                KeyboardView(
-                    layout: KeyboardLayout(octave: octave, whiteCount: wide ? 14 : 7),
-                    pressed: touches.union(accessibilityNotes.keys).union(midiKeys.map(\.note)),
-                    showLabels: !compact,
-                    onTouches: updateTouches,
-                    onAccessibilityPlay: playAccessibleNote
-                )
-                .frame(maxHeight: 460)
-                .id(KeyWindow(octave: octave, wide: wide))
+                keyboard(layout: KeyboardLayout(octave: octave, whiteCount: wide ? 14 : 7),
+                         showLabels: !compact)
+                    .frame(maxHeight: 460)
+                    .id(KeyWindow(octave: octave, wide: wide))
                 damperControl
             }
             .frame(maxHeight: .infinity)
             .padding(.horizontal, 16)
-            .padding(.vertical, compact ? 8 : 26)
+            .padding(.vertical, compact ? 8 : 16)
             .onChange(of: wide, initial: true) { _, newValue in
                 releaseKeys()
                 visibleNotes = newValue ? 14 : 7
                 octave = min(octave, maximumOctave)
             }
         }
-        .background {
-            LinearGradient(colors: [Color(white: 0.13), Color(white: 0.065)],
-                           startPoint: .topLeading, endPoint: .bottomTrailing)
-                .ignoresSafeArea()
-        }
-        .preferredColorScheme(.dark)
-        .tint(brass)
-        .task {
-            guard playsAudio else { return }
-            midi.start(receive: receiveMIDI, disconnected: disconnectMIDI)
-            if phase == .active { audio.start() }
-        }
-        .onDisappear {
-            midi.stop()
-            audio.stop()
-        }
-        .onChange(of: bodyPercent, initial: true) { _, value in
-            audio.setBody(min(100, max(0, value)))
-        }
-        .onChange(of: reverbPercent, initial: true) { _, value in
-            audio.setReverb(min(100, max(0, value)))
-        }
-        .onChange(of: phase) { _, value in
-            if value == .active {
-                if playsAudio { audio.start() }
-            } else {
-                releaseKeys()
-                #if os(iOS)
-                if value == .background {
-                    midiKeys.removeAll()
-                    midiDampers.removeAll()
-                    midiSoftPedals.removeAll()
-                    pedal = 0
-                    audio.releaseAll()
-                    audio.stop()
+        #endif
+    }
+
+    var body: some View {
+        instrumentLayout
+            .background {
+                LinearGradient(colors: [Color(white: 0.13), Color(white: 0.065)],
+                               startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .ignoresSafeArea()
+            }
+            .preferredColorScheme(.dark)
+            .tint(brass)
+            .task {
+                guard playsAudio else { return }
+                for parameter in PianoParameter.allCases {
+                    let percent = UserDefaults.standard.object(forKey: parameter.storageKey) as? Int
+                    audio.setParameter(parameter, percent: percent ?? parameter.defaultPercent)
                 }
-                #endif
+                midi.start(receive: receiveMIDI, disconnected: disconnectMIDI)
+                if phase == .active { audio.start() }
             }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .AVAudioEngineConfigurationChange)
-            .receive(on: RunLoop.main)) { _ in
-            guard playsAudio else { return }
-            #if os(iOS)
-            guard phase == .active else { return }
-            #endif
-            releaseKeys()
-            midiKeys.removeAll()
-            audio.releaseAll()
-            updateDamper()
-            audio.start()
-        }
-        .alert("Playing the piano", isPresented: $info) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes.")
-        }
-    }
-
-    private var header: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Physical Modeling")
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(brass)
-                Text("Piano")
-                    .font(.system(.largeTitle, design: .serif, weight: .semibold))
-                    .accessibilityAddTraits(.isHeader)
+            .onDisappear {
+                midi.stop()
+                audio.stop()
             }
-            Spacer()
-            HStack(spacing: 0) {
-                iconButton("slider.horizontal.3", label: "Sound controls") { showSound.toggle() }
-                    .popover(isPresented: $showSound) {
-                        soundControls
-                        #if os(iOS)
-                            .presentationCompactAdaptation(.popover)
-                        #endif
+            .onChange(of: phase) { _, value in
+                if value == .active {
+                    if playsAudio { audio.start() }
+                } else {
+                    releaseKeys()
+                #if os(iOS)
+                    if value == .background {
+                        midiKeys.removeAll()
+                        midiDampers.removeAll()
+                        midiSoftPedals.removeAll()
+                        pedal = 0
+                        audio.releaseAll()
+                        audio.stop()
                     }
-                iconButton("info.circle", label: "Playing the piano") { info = true }
+                #endif
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .AVAudioEngineConfigurationChange)
+                .receive(on: RunLoop.main)) { _ in
+                guard playsAudio else { return }
+            #if os(iOS)
+                guard phase == .active else { return }
+            #endif
+                releaseKeys()
+                midiKeys.removeAll()
+                audio.releaseAll()
+                updateDamper()
+                audio.start()
+            }
+            .alert("Playing the piano", isPresented: $info) {
+                Button("OK", role: .cancel) {}
+            } message: {
+            #if os(macOS)
+                Text("Click or drag across any of the 88 keys. Drag a sound knob up or down to adjust it. Double-click it to reset. Use the damper slider and soft pedal to shape the sound.")
+            #else
+                Text("Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes. Drag the sound knobs vertically to adjust them.")
+            #endif
+            }
+            .environment(\.locale, language.locale)
+    }
+
+    @ViewBuilder private var retryAudio: some View {
+        if audio.unavailable {
+            Button("Retry audio", systemImage: "speaker.slash") { audio.start() }
+                .font(.callout)
+        }
+    }
+
+    private func keyboard(layout: KeyboardLayout, showLabels: Bool, miniature: Bool = false) -> some View {
+        KeyboardView(layout: layout,
+                     pressed: touches.union(accessibilityNotes.keys).union(midiKeys.map(\.note)),
+                     showLabels: showLabels, miniature: miniature,
+                     onTouches: updateTouches, onAccessibilityPlay: playAccessibleNote)
+    }
+
+    private static let orderedControls: [PianoParameter] = [
+        .hammer, .brightness, .decay, .unison, .inharmonicity, .resonance, .body, .reverb, .volume
+    ]
+
+    private func toneControls(columns: Int) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            ForEach(Array(stride(from: 0, to: Self.orderedControls.count, by: columns)), id: \.self) { start in
+                let end = min(start + columns, Self.orderedControls.count)
+                HStack(spacing: 4) {
+                    ForEach(Self.orderedControls[start..<end], id: \.self) { parameter in
+                        SoundKnob(parameter: parameter, tint: brass) {
+                            audio.setParameter(parameter, percent: $0)
+                        }
+                        .frame(width: knobWidth(for: parameter))
+                    }
+                    Spacer(minLength: 0)
+                }
             }
         }
     }
 
-    private var soundControls: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            soundSlider("Soundboard body", percent: $bodyPercent)
-            soundSlider("Room reverb", percent: $reverbPercent)
-        }
-        .frame(width: 230)
-        .padding(16)
+    private var fullToneRowWidth: CGFloat {
+        Self.orderedControls.reduce(0) { $0 + knobWidth(for: $1) } + CGFloat(Self.orderedControls.count - 1) * 4
     }
 
-    private func soundSlider(_ label: LocalizedStringKey, percent: Binding<Int>) -> some View {
-        let amount = Binding(
-            get: { Double(min(100, max(0, percent.wrappedValue))) },
-            set: { percent.wrappedValue = Int($0.rounded()) }
-        )
-        let value = amount.wrappedValue.formatted(.percent.scale(1))
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(label).font(.headline)
-                Spacer(minLength: 16)
-                Text(value).monospacedDigit().foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
-            }
-            Slider(value: amount, in: 0...100, step: 1) { Text(label) }
-                .accessibilityValue(Text(value))
+    private func knobWidth(for parameter: PianoParameter) -> CGFloat {
+        switch parameter {
+        case .body, .inharmonicity: 64
+        case .brightness, .resonance, .reverb: 54
+        default: 46
         }
     }
 
@@ -182,6 +202,7 @@ struct PianoView: View {
 
     private var controls: some View {
         HStack(spacing: 8) {
+            #if !os(macOS)
             HStack(spacing: 0) {
                 iconButton("chevron.left", label: "Lower octave") { shift(-1) }
                     .disabled(octave == 0)
@@ -204,6 +225,7 @@ struct PianoView: View {
                     .disabled(octave == maximumOctave)
             }
             .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
+            #endif
 
             HStack(spacing: 5) {
                 Image(systemName: "speedometer")
@@ -217,11 +239,36 @@ struct PianoView: View {
             }
 
             pedalToggle("speaker.wave.1", label: "Soft pedal", isOn: $softPedal)
+            HStack(spacing: 0) {
+                languageMenu
+                iconButton("info.circle", label: "Playing the piano") { info = true }
+            }
         }
     }
 
+    private var languageMenu: some View {
+        Menu {
+            Picker("Language", selection: $language) {
+                ForEach(PianoLanguage.allCases, id: \.self) { option in
+                    option.label.tag(option)
+                }
+            }
+        } label: {
+            Image(systemName: "globe")
+                .font(.body.weight(.medium))
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+                .accessibilityHidden(true)
+        }
+        .menuIndicator(.hidden)
+        .menuStyle(.borderlessButton)
+        .foregroundStyle(brass)
+        .accessibilityLabel(Text("Language"))
+        .help(Text("Language"))
+    }
+
     private var damperControl: some View {
-        let percent = max(pedal, Double(externalDamper) * 100 / 127).formatted(.percent.scale(1).precision(.fractionLength(0)))
+        let percent = max(pedal, Double(externalDamper) * 100 / 127).formatted(.percent.scale(1).precision(.fractionLength(0)).locale(language.locale))
         return HStack(spacing: 10) {
             iconButton("waveform.path", label: "Toggle damper pedal") {
                 pedal = pedal == 0 ? 100 : 0
@@ -349,6 +396,121 @@ struct PianoView: View {
     }
 }
 
+private enum PianoLanguage: String, CaseIterable {
+    case system
+    case english = "en"
+    case japanese = "ja"
+    case simplifiedChinese = "zh-Hans"
+
+    var locale: Locale { self == .system ? .autoupdatingCurrent : Locale(identifier: rawValue) }
+
+    var label: Text {
+        switch self {
+        case .system: Text("System default")
+        case .english: Text(verbatim: "English")
+        case .japanese: Text(verbatim: "日本語")
+        case .simplifiedChinese: Text(verbatim: "简体中文")
+        }
+    }
+
+    #if os(macOS)
+    var windowTitle: String {
+        let bundle = Bundle.main
+        if self != .system, let url = bundle.url(forResource: rawValue, withExtension: "lproj"),
+           let localized = Bundle(url: url) {
+            return localized.localizedString(forKey: "Piano", value: "Piano", table: nil)
+        }
+        return bundle.localizedString(forKey: "Piano", value: "Piano", table: nil)
+    }
+    #endif
+}
+
+private struct SoundKnob: View {
+    @Environment(\.locale) private var locale
+    let parameter: PianoParameter
+    let tint: Color
+    let update: (Int) -> Void
+    @AppStorage private var percent: Int
+    @State private var dragStart: Int?
+
+    init(parameter: PianoParameter, tint: Color, update: @escaping (Int) -> Void) {
+        self.parameter = parameter
+        self.tint = tint
+        self.update = update
+        _percent = AppStorage(wrappedValue: parameter.defaultPercent, parameter.storageKey)
+    }
+
+    private var value: Int { min(100, max(0, percent)) }
+    private var readout: String { value.formatted(.percent.scale(1).locale(locale)) }
+
+    var body: some View {
+        let label = LocalizedStringKey(parameter.title)
+        VStack(spacing: 1) {
+            Text(label)
+                .font(.caption2.weight(.semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            knob
+            Text(readout).font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(label))
+        .accessibilityValue(Text(readout))
+        .accessibilityAdjustableAction { direction in
+            let step = max(2, Int(parameter.step))
+            switch direction {
+            case .increment: setValue(value + step)
+            case .decrement: setValue(value - step)
+            @unknown default: break
+            }
+        }
+        .help(Text(label))
+        .onChange(of: percent, initial: true) { _, value in update(value) }
+    }
+
+    private func setValue(_ requested: Int) {
+        let clamped = min(100, max(0, requested))
+        percent = Int((Double(clamped) / parameter.step).rounded() * parameter.step)
+    }
+
+    private var knob: some View {
+        ZStack {
+            ForEach(0...12, id: \.self) { tick in
+                Capsule()
+                    .fill(tick * 100 <= value * 12 ? tint : Color.white.opacity(0.22))
+                    .frame(width: 1, height: tick.isMultiple(of: 3) ? 4 : 2)
+                    .offset(y: -19.5)
+                    .rotationEffect(.degrees(Double(tick) * 22.5 - 135))
+            }
+            Circle()
+                .fill(LinearGradient(colors: [Color(white: 0.36), Color(white: 0.09), Color(white: 0.16)],
+                                     startPoint: .topLeading, endPoint: .bottomTrailing))
+                .overlay { Circle().strokeBorder(.white.opacity(0.22), lineWidth: 1) }
+                .frame(width: 31, height: 31)
+            Capsule()
+                .fill(tint)
+                .frame(width: 2, height: 8)
+                .offset(y: -9)
+                .rotationEffect(.degrees(Double(value) * 2.7 - 135))
+        }
+        .frame(width: 44, height: 44)
+        .contentShape(Rectangle())
+        .gesture(DragGesture(minimumDistance: 1).onChanged { event in
+            if dragStart == nil { dragStart = value }
+            let start = dragStart ?? value
+            if parameter.step > 1 {
+                // Discrete controls advance by one detent with a short drag.
+                let detents = Int((event.translation.height / 16).rounded())
+                setValue(start - detents * Int(parameter.step))
+            } else {
+                let delta = Int((event.translation.height / 1.5).rounded())
+                setValue(start - delta)
+            }
+        }.onEnded { _ in dragStart = nil })
+        .onTapGesture(count: 2) { percent = parameter.defaultPercent }
+    }
+}
+
 private struct MIDIKey: Hashable {
     let source: MIDIEndpointRef
     let channel: Int
@@ -363,7 +525,7 @@ private struct KeyWindow: Hashable {
 struct PianoView_Previews: PreviewProvider {
     static var previews: some View {
         #if os(macOS)
-        PianoView(playsAudio: false).frame(width: 900, height: 650)
+        PianoView(playsAudio: false).frame(width: 960, height: 330)
         #else
         Group {
             PianoView(playsAudio: false)

@@ -3,7 +3,7 @@
 "Retry audio" = "重试音频";
 "Playing the piano" = "钢琴演奏";
 "OK" = "确定";
-"Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes." = "同时按下多个琴键即可弹奏和弦。使用箭头切换八度，用滑块调整击弦力度。使用延音滑块调节松开琴键后的余音。开启柔音踏板后，新弹奏的音符会更柔和。";
+"Touch several keys to play a chord. Use the arrows to change octaves and the slider to set hammer velocity. Use the damper slider to control how long released notes ring. Use the soft pedal for a gentler tone on the next notes. Drag the sound knobs vertically to adjust them." = "同时按下多个琴键即可弹奏和弦。使用箭头切换八度，用滑块调整击弦力度。使用延音滑块调节松开琴键后的余音。开启柔音踏板后，新弹奏的音符会更柔和。上下拖动音色旋钮可调节参数。";
 "Lower octave" = "降低八度";
 "Higher octave" = "升高八度";
 "Bass" = "低音";
@@ -17,3 +17,15 @@
 "Toggle damper pedal" = "切换延音踏板";
 "Soundboard body" = "音板厚度";
 "Sound controls" = "音色调节";
+"Tone & action" = "音色与击弦";
+"Acoustics & space" = "共鸣与空间";
+"Hammer" = "琴槌硬度";
+"Brightness" = "明亮度";
+"Decay" = "衰减时间";
+"Unison" = "同音弦音差";
+"Inharmonicity" = "非谐性";
+"Resonance" = "琴弦共鸣";
+"Volume" = "音量";
+"Click or drag across any of the 88 keys. Drag a sound knob up or down to adjust it. Double-click it to reset. Use the damper slider and soft pedal to shape the sound." = "点击或拖过任意琴键即可弹奏。上下拖动音色旋钮可调节参数，双击可恢复默认值。使用延音滑块和柔音踏板塑造音色。";
+"Language" = "语言";
+"System default" = "跟随系统";

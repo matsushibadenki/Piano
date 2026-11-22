@@ -19,6 +19,8 @@ struct KeyboardLayout {
     let white: [Int]
     let black: [Accidental]
 
+    static let full = KeyboardLayout(octave: 0, whiteCount: 52)
+
     init(octave: Int, whiteCount: Int) {
         let naturals = (21...108).filter { [0, 2, 4, 5, 7, 9, 11].contains($0 % 12) }
         let requested = naturals.firstIndex { $0 >= (octave + 1) * 12 } ?? 0
@@ -45,9 +47,11 @@ struct KeyboardLayout {
 }
 
 struct KeyboardView: View {
+    @Environment(\.displayScale) private var displayScale
     let layout: KeyboardLayout
     let pressed: Set<Int>
     let showLabels: Bool
+    var miniature = false
     let onTouches: (Set<Int>) -> Void
     let onAccessibilityPlay: (Int) -> Void
 
@@ -80,21 +84,26 @@ struct KeyboardView: View {
     private func key(_ note: Int, black: Bool) -> some View {
         let down = pressed.contains(note)
         let gold = Color(red: 0.88, green: 0.64, blue: 0.33)
-        return UnevenRoundedRectangle(bottomLeadingRadius: black ? 5 : 7, bottomTrailingRadius: black ? 5 : 7)
+        let radius: CGFloat = miniature ? (black ? 2 : 3) : (black ? 5 : 7)
+        // Two pixels across adjacent insets leave a full visible pixel
+        // even when the key boundary falls between display pixels.
+        let keyInset = max(miniature ? 0.4 : 0.6, 1 / displayScale)
+        return UnevenRoundedRectangle(bottomLeadingRadius: radius, bottomTrailingRadius: radius)
             .fill(LinearGradient(
                 colors: down ? [gold.opacity(0.75), gold] : black
                     ? [Color(white: 0.11), Color(white: 0.23)]
                     : [Color(red: 0.85, green: 0.82, blue: 0.76), Color(red: 0.99, green: 0.97, blue: 0.92)],
                 startPoint: .top, endPoint: .bottom
             ))
-            .padding(.horizontal, black ? 0 : 0.6)
+            .padding(.horizontal, black ? 0 : keyInset)
             .shadow(color: .black.opacity(black ? 0.4 : 0), radius: 3, y: 3)
             .overlay(alignment: .bottom) {
-                if showLabels && !black {
+                if showLabels && !black && (!miniature || note % 12 == 0) {
                     Text(verbatim: noteName(note))
-                        .font(.caption2.monospaced().weight(note % 12 == 0 ? .bold : .regular))
+                        .font(miniature ? .system(size: 8, weight: .medium, design: .monospaced)
+                            : .caption2.monospaced().weight(note % 12 == 0 ? .bold : .regular))
                         .foregroundStyle(Color(white: 0.28))
-                        .padding(.bottom, 13)
+                        .padding(.bottom, miniature ? 5 : 13)
                 }
             }
             .accessibilityElement(children: .ignore)

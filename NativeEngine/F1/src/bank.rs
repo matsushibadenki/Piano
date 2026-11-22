@@ -129,6 +129,8 @@ pub struct Bank {
     dg: K,
     dg_tgt: K,
     dg_coef: K,
+    decay: K,
+    decay_target: K,
     z: K,
     hp_c: K,
     hp_s: K,
@@ -264,6 +266,8 @@ impl Bank {
             dg: F4::splat(1.0),
             dg_tgt: F4::splat(1.0),
             dg_coef: F4::splat((1.0 - (-1.0 / (0.004 * fs)).exp()) as f32),
+            decay: F4::splat(1.0),
+            decay_target: F4::splat(1.0),
             z: F4::zero(),
             hp_c: F4::zero(),
             hp_s: F4::zero(),
@@ -339,6 +343,7 @@ impl Bank {
     #[inline]
     pub fn sync(&mut self, k: usize, v: &Voice) {
         self.dg_tgt.set(k, v.damp_target as f32);
+        self.decay_target.set(k, v.decay_gain as f32);
         self.gl.set(k, (v.pan[0] * v.direct_g) as f32);
         self.gr.set(k, (v.pan[1] * v.direct_g) as f32);
         if self.sc[k] != v.sc {
@@ -383,6 +388,7 @@ impl Bank {
         self.lp_s.set(k, 0.0);
         self.e_acc.set(k, 0.0);
         self.dg.set(k, self.dg_tgt.get(k));
+        self.decay.set(k, self.decay_target.get(k));
         for x in self.xk.iter_mut() {
             x[k] = 0.0;
         }
@@ -500,6 +506,7 @@ impl Bank {
             }
             // loss, tuning, reflection at the bridge end, damper
             self.dg += (self.dg_tgt - self.dg) * self.dg_coef;
+            self.decay += (self.decay_target - self.decay) * self.dg_coef;
             // Felt contact takes more energy from the upper partials.
             // Blend with a low-pass wave inside the loop, using the same
             // smoothed contact as the broadband damping. Lift clears the
@@ -507,7 +514,7 @@ impl Bank {
             let felt_mix = (F4::splat(1.0) - self.dg) * F4::splat(0.8);
             let mut b = [F4::zero(); NS];
             for s in 0..NS {
-                let ls = self.loss_g[s] * x[s] + self.loss_p[s] * self.loss_s[s];
+                let ls = self.loss_g[s] * self.decay * x[s] + self.loss_p[s] * self.loss_s[s];
                 self.loss_s[s] = ls;
                 let y = self.eta[s] * ls + self.frac_s[s];
                 self.frac_s[s] = ls - self.eta[s] * y;

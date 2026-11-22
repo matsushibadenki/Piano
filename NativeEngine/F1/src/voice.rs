@@ -22,6 +22,7 @@ use crate::design::*;
 use crate::morph::MorphBank;
 use crate::simd::F4;
 use std::f64::consts::PI;
+use std::sync::Arc;
 
 pub struct Hammer {
     pub active: bool,
@@ -35,7 +36,7 @@ pub struct Hammer {
     pub contact_samples: u32,
     pub peak_force: f64,
     /// u^(p-1) lookup table.
-    pow_tab: Vec<f64>,
+    pow_tab: Arc<[f64]>,
 }
 
 /// Longitudinal string motion driven by the transverse vibration
@@ -108,6 +109,7 @@ pub struct Voice {
     long: Longitudinal,
     /// Round-trip gain of the damper as it is asked for (1: lifted).
     pub damp_target: f64,
+    pub decay_gain: f64,
     damp_on: f64,
     pub held: bool,
     pub active: bool,
@@ -189,6 +191,15 @@ impl Voice {
     /// `tune_cents`: correction of the string tuning that compensates the
     /// pitch shift caused by the reactive part of the bridge admittance.
     pub fn new(fs: f64, key: KeyParams, max_ap: usize, max_bq: usize, tune_cents: f64) -> Voice {
+        Self::with_hammer_table(fs, key, max_ap, max_bq, tune_cents, None)
+    }
+
+    pub(crate) fn hammer_table(&self) -> Arc<[f64]> {
+        Arc::clone(&self.hammer.pow_tab)
+    }
+
+    pub(crate) fn with_hammer_table(fs: f64, key: KeyParams, max_ap: usize, max_bq: usize,
+        tune_cents: f64, hammer_table: Option<Arc<[f64]>>) -> Voice {
         let b1 = key.rate_after / 8.686;
         let (loss_g, loss_p) = design_loss(fs, key.f1, b1, key.b3);
         let (designs, _k) = design_dispersions(fs, key.f1, key.b_inh, loss_p, &[(max_ap, max_bq), (max_ap.min(LIGHT_AP), max_bq.min(LIGHT_BQ))]);
@@ -292,7 +303,9 @@ impl Voice {
                 p: key.hammer_p,
                 contact_samples: 0,
                 peak_force: 0.0,
-                pow_tab: (0..=POW_N).map(|i| (i as f64 / POW_SCALE).powf(key.hammer_p - 1.0)).collect(),
+                pow_tab: hammer_table.unwrap_or_else(|| {
+                    (0..=POW_N).map(|i| (i as f64 / POW_SCALE).powf(key.hammer_p - 1.0)).collect()
+                }),
             },
             k_scale: key.strike,
             ys: [0.0; MAX_STRINGS],
@@ -300,6 +313,7 @@ impl Voice {
             f_prev: [0.0; MAX_STRINGS],
             long,
             damp_target: damp_on,
+            decay_gain: 1.0,
             damp_on,
             held: false,
             active: false,
@@ -375,6 +389,12 @@ impl Voice {
         }
         self.apply_lever();
         true
+    }
+
+    pub(crate) fn set_decay(&mut self, factor: f64) {
+        // Change the broadband string loss while retaining the designed
+        // frequency-dependent losses and the separately modeled damper.
+        self.decay_gain = ((1.0 - 1.0 / factor) * self.key.rate_after / (8.686 * self.key.f1)).exp();
     }
 
     pub fn set_hardness(&mut self, h: f64) {

@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		01E27CDCA7D639A41BAD3A10 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 47883748E5185116AACD6639 /* LICENSE */; };
 		035E9DDB7D9D4BC1868DF70C /* PianoAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FE9207F1C27EF440CD60DC /* PianoAudio.swift */; };
+		0B1C4E7293217DDE1E81182A /* PianoParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7AC3131012E6360455D82C /* PianoParameter.swift */; };
 		0EAD32B2C69F7E8420917133 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2426AE581076DA0A8D119 /* KeyboardView.swift */; };
 		0F167A9C42BA9A998A1961D5 /* PianoAudioUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D5B18824EE092918A1319D /* PianoAudioUnit.swift */; };
 		13AE88B31223FD6D3C3FBF23 /* PianoAU-macOS.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA27A7644AE9CCD72070224A /* PianoAU-macOS.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		172012D6E44A0FDA31CDFA28 /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
 		19B90EBC0943CD9CB0CA2DD9 /* PianoAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69FE9207F1C27EF440CD60DC /* PianoAudio.swift */; };
+		28C14F28F9CB0A46523DD04C /* PianoParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7AC3131012E6360455D82C /* PianoParameter.swift */; };
 		34FB2737325DB99432AB65EE /* PianoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E2FFB256AFB4EB19129A93 /* PianoApp.swift */; };
 		3B759AB4CFB1A94749592B54 /* PianoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E2FFB256AFB4EB19129A93 /* PianoApp.swift */; };
 		494C16589795B21B09270202 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
@@ -23,6 +25,7 @@
 		65EBBA93B52515D10405AFAD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
 		698CCAB30110E722BA9ED798 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
 		6EAE69A168168B3B0FB4E72B /* MIDIInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0238243698453DFAF9F26946 /* MIDIInput.swift */; };
+		70C8E87C8F1A38B73B8E391A /* PianoParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7AC3131012E6360455D82C /* PianoParameter.swift */; };
 		7E1F0B3A14813D109B6BFBFF /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
 		81DCE9B02598F98BEB9FDAE7 /* PianoAudioUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D5B18824EE092918A1319D /* PianoAudioUnit.swift */; };
 		87F79A44780D32CA3BF1FD63 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
@@ -33,6 +36,7 @@
 		B34473ECE3FC7D1862F3F6E3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 404FFC6846D605CBF1753E3F /* Localizable.strings */; };
 		BFE5482C0430D6EDEF60C0B0 /* PianoMIDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */; };
 		C3760CA4E858C6D334000BC6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
+		C7E608D976C35F6FE29ECAA8 /* PianoParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7AC3131012E6360455D82C /* PianoParameter.swift */; };
 		CD4ABD6F0543F4A6278CC155 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BC79DDB849C71082C0018EB3 /* InfoPlist.strings */; };
 		E43630BD890A5BF95D325138 /* MIDIInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0238243698453DFAF9F26946 /* MIDIInput.swift */; };
 		EEBC1C0607F13C0D963E5D18 /* PianoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2B9C455175179828B75621 /* PianoModel.swift */; };
@@ -97,6 +101,7 @@
 		6489E238F1508689DDBB7ECA /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		68A884C16A8E48711B4D97FC /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		69FE9207F1C27EF440CD60DC /* PianoAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoAudio.swift; sourceTree = "<group>"; };
+		6B7AC3131012E6360455D82C /* PianoParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoParameter.swift; sourceTree = "<group>"; };
 		95A2426AE581076DA0A8D119 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 		A489E0A941564C5060F9E218 /* PianoAU-iOS.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = "PianoAU-iOS.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA27A7644AE9CCD72070224A /* PianoAU-macOS.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "PianoAU-macOS.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +157,7 @@
 				69FE9207F1C27EF440CD60DC /* PianoAudio.swift */,
 				F2C8D0039E4B2A1D24382C6E /* PianoMIDI.swift */,
 				1B2B9C455175179828B75621 /* PianoModel.swift */,
+				6B7AC3131012E6360455D82C /* PianoParameter.swift */,
 				BC79DDB849C71082C0018EB3 /* InfoPlist.strings */,
 				404FFC6846D605CBF1753E3F /* Localizable.strings */,
 			);
@@ -413,6 +419,7 @@
 				035E9DDB7D9D4BC1868DF70C /* PianoAudio.swift in Sources */,
 				BFE5482C0430D6EDEF60C0B0 /* PianoMIDI.swift in Sources */,
 				637250DE9D020E7EA725DDAE /* PianoModel.swift in Sources */,
+				C7E608D976C35F6FE29ECAA8 /* PianoParameter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +430,7 @@
 				81DCE9B02598F98BEB9FDAE7 /* PianoAudioUnit.swift in Sources */,
 				F527DB10E49BD6C0D6994667 /* PianoMIDI.swift in Sources */,
 				B260A4E91CACB801547BE238 /* PianoModel.swift in Sources */,
+				70C8E87C8F1A38B73B8E391A /* PianoParameter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +444,7 @@
 				19B90EBC0943CD9CB0CA2DD9 /* PianoAudio.swift in Sources */,
 				7E1F0B3A14813D109B6BFBFF /* PianoMIDI.swift in Sources */,
 				4D8DE8C55A5E8679CA253894 /* PianoModel.swift in Sources */,
+				0B1C4E7293217DDE1E81182A /* PianoParameter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +455,7 @@
 				0F167A9C42BA9A998A1961D5 /* PianoAudioUnit.swift in Sources */,
 				172012D6E44A0FDA31CDFA28 /* PianoMIDI.swift in Sources */,
 				EEBC1C0607F13C0D963E5D18 /* PianoModel.swift in Sources */,
+				28C14F28F9CB0A46523DD04C /* PianoParameter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,7 +532,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -541,7 +551,7 @@
 					"$(DERIVED_FILE_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -708,7 +718,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -733,7 +743,7 @@
 					"$(DERIVED_FILE_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

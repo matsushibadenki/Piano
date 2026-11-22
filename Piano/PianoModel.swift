@@ -27,12 +27,8 @@ final class PianoModel {
         piano_f1_all_off(handle)
     }
 
-    func setBody(_ amount: Float) {
-        piano_f1_set_body(handle, amount)
-    }
-
-    func setReverb(_ amount: Float) {
-        piano_f1_set_reverb(handle, amount)
+    func setParameter(_ parameter: PianoParameter, percent: Float) {
+        piano_f1_set_parameter(handle, parameter.rawValue, percent / 100)
     }
 
     func render(_ left: UnsafeMutablePointer<Float>, _ right: UnsafeMutablePointer<Float>, frames: UInt32) {
