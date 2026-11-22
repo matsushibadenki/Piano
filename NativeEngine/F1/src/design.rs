@@ -132,6 +132,7 @@ pub fn direct_share(midi: usize) -> f64 {
 #[derive(Clone, Debug)]
 pub struct KeyParams {
     pub midi: usize,
+    pub treble_weight: f64,
     /// Frequency of the first partial (includes stretch tuning) [Hz].
     pub f1: f64,
     /// Inharmonicity coefficient B: f_n = n f0 sqrt(1 + B n^2).
@@ -195,6 +196,10 @@ impl Unison {
         let mut key = key_params(midi);
         if midi >= self.first_undamped_note() {
             key.damper_t60 = 0.0;
+        }
+        if matches!(self, Self::Acoustic) {
+            key.treble_weight = interp(midi as f64,
+                &[(77.0, 0.0), (84.0, 0.55), (91.0, 1.0), (102.0, 0.95), (108.0, 0.8)], false);
         }
         if matches!(self, Self::Acoustic) && key.n_struck > 1 {
             let strings = key.n_struck;
@@ -326,6 +331,7 @@ pub fn key_params(midi: usize) -> KeyParams {
 
     KeyParams {
         midi,
+        treble_weight: 0.0,
         f1,
         b_inh,
         n_wg,

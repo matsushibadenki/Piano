@@ -308,7 +308,10 @@ impl Engine {
         let midi = k.midi;
         // (the mistuning of the unison stays that of the nominal rates)
         let extra = sustain.0 * (k.rate_prompt - k.rate_after);
-        k.rate_after *= sustain.1;
+        // Give the treble core more time to ring without changing the
+        // prompt loss into the board or the hammer's contact duration.
+        let treble_weight = k.treble_weight;
+        k.rate_after *= sustain.1 * (1.0 - 0.24 * treble_weight);
         k.rate_prompt = k.rate_after + extra;
         let (zone, zf) = bridge_zone(k.midi);
         let mut sc = [0.0; NZONES];
@@ -348,7 +351,7 @@ impl Engine {
             shift = pull(c);
         }
         let mut v = Voice::with_hammer_table(fs, k, max_ap, max_bq, -TUNE_COMP * shift, hammer_table);
-        v.direct_g = crate::voicing::direct_gain(midi) * direct_share(midi);
+        v.direct_g = crate::voicing::direct_gain(midi) * direct_share(midi) * (1.0 + 0.57 * treble_weight);
         v.set_morph(fs, &crate::morph::gains(midi, fs));
         v.set_coupling(c);
         v.set_sympathetic_lever(SYMPATHETIC_LEVER);
@@ -614,7 +617,8 @@ impl Engine {
             // Softer towards the top: against the short, thin notes above
             // C6 the same shock is heard as a hard click.
             let treble = 1.0 - 0.5 * ((midi as f64 - 84.0) / 24.0).clamp(0.0, 1.0);
-            self.add_knock(self.knock * KNOCK_FORCE * treble * v_key, 0.003);
+            let action = 1.0 - 0.28 * self.voices[idx].key.treble_weight;
+            self.add_knock(self.knock * KNOCK_FORCE * treble * action * v_key, 0.003);
         }
     }
 

@@ -326,7 +326,8 @@ impl Voice {
             quiet_limit,
             direct_g: 0.0,
             direct_hp_c: 1.0 - (-2.0 * PI * 0.5 * key.f1 / fs).exp(),
-            direct_lp_c: 1.0 - (-2.0 * PI * (2.5 * key.f1).clamp(400.0, 5000.0) / fs).exp(),
+            direct_lp_c: 1.0 - (-2.0 * PI * (2.5 * key.f1).clamp(400.0, 5000.0)
+                * (1.0 - 0.22 * key.treble_weight) / fs).exp(),
             bridge: 0.0,
             morph: MorphBank::default(),
             morph_fade: 0.0,
